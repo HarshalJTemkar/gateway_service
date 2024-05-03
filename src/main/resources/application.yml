@@ -1,3 +1,10 @@
+server:
+  port: 9090
+  
 spring:
   application:
     name: gateway_service
+  profiles:
+    active: dev  
+  config:
+    import: optional:configserver:http://${CONFIG_SERVER_HOST:localhost}:9296
