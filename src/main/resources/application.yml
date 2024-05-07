@@ -8,3 +8,24 @@ spring:
     active: dev  
   config:
     import: optional:configserver:http://${CONFIG_SERVER_HOST:localhost}:9296
+  cloud:
+    gateway:
+      routes:
+        - id : customer_service
+          uri: lb://customer_service
+          predicates:
+            - Path=/rest-api/customer/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: customer_service
+                fallbackuri: forward:/customerServiceFallBack
+        - id: payment_service
+          uri: lb://payment_service
+          predicates:
+            - Path=/rest-api/payment/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: payment_service
+                fallbackuri: forward:/paymentServiceFallBack
